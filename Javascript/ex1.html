@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Portal - Setup</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.hero {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.setup-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.setup-card h2 {
+    color: #6e8efb;
+    margin-bottom: 1rem;
+}
+
+.loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #6e8efb;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>Welcome to Our Community</h1>
+        <p>Connecting neighbors through shared experiences</p>
+    </header>
+    <main>
+        <div class="container">
+            <div class="setup-card">
+                <h2>Portal Setup Complete</h2>
+                <p>Check the console for welcome message!</p>
+                <div class="loader" id="loader"></div>
+            </div>
+        </div>
+    </main>
+    <script>
+        
+console.log("Welcome to the Community Portal");
+
+
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        alert("Community Portal is ready to use!");
+        document.getElementById('loader').style.display = 'none';
+    }, 1500);
+});
+    </script>
+</body>
+</html>

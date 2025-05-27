@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Explorer - jQuery & Frameworks</title>
+    <style>
+        :root {
+    --primary-color: #6c63ff;
+    --secondary-color: #4d44db;
+    --accent-color: #ff6584;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --gray-color: #6c757d;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --jquery-color: #0769ad;
+    --react-color: #61dafb;
+    --vue-color: #42b983;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f5f7;
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    color: var(--jquery-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.controls button {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--jquery-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.controls button:hover {
+    background-color: #055a8c;
+    transform: translateY(-2px);
+}
+
+#toggleFade {
+    background-color: var(--primary-color);
+}
+
+#toggleFade:hover {
+    background-color: var(--secondary-color);
+}
+
+#addEvent {
+    background-color: var(--success-color);
+}
+
+#addEvent:hover {
+    background-color: #218838;
+}
+
+#frameworkInfo {
+    background-color: var(--accent-color);
+}
+
+#frameworkInfo:hover {
+    background-color: #e04f6d;
+}
+
+.events-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.event-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    opacity: 1;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.event-image {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+}
+
+.event-card h3 {
+    padding: 1rem 1rem 0.5rem;
+    color: var(--dark-color);
+}
+
+.event-card p {
+    padding: 0 1rem 1rem;
+    color: var(--gray-color);
+    font-size: 0.9rem;
+}
+
+.register-btn {
+    display: block;
+    width: calc(100% - 2rem);
+    margin: 0 1rem 1rem;
+    padding: 0.75rem;
+    background-color: var(--jquery-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.register-btn:hover {
+    background-color: #055a8c;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 800px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--gray-color);
+}
+
+.modal h3 {
+    margin-bottom: 1.5rem;
+    color: var(--jquery-color);
+    text-align: center;
+}
+
+.framework-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.jquery-section h4 {
+    color: var(--jquery-color);
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--jquery-color);
+    padding-bottom: 0.5rem;
+}
+
+.modern-section h4 {
+    color: var(--vue-color);
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--vue-color);
+    padding-bottom: 0.5rem;
+}
+
+.modal ul {
+    list-style-type: none;
+}
+
+.modal ul li {
+    padding: 0.5rem 0;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.modal ul li:before {
+    content: "•";
+    color: var(--jquery-color);
+    position: absolute;
+    left: 0;
+}
+
+.modern-section ul li:before {
+    color: var(--vue-color);
+}
+
+.modal-btn {
+    display: block;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--jquery-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn:hover {
+    background-color: #055a8c;
+}
+
+@media (max-width: 768px) {
+    .framework-comparison {
+        grid-template-columns: 1fr;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .controls button {
+        width: 100%;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-code"></i> jQuery & Frameworks</h1>
+            <div class="controls">
+                <button id="toggleFade">Toggle Event Cards</button>
+                <button id="addEvent">Add Random Event</button>
+                <button id="frameworkInfo">Framework Benefits</button>
+            </div>
+        </header>
+
+        <div class="events-container" id="eventsContainer">
+            <div class="event-card">
+                <div class="event-image" style="background-image: url('https://source.unsplash.com/random/600x400/?tech')"></div>
+                <h3>Tech Conference</h3>
+                <p>Learn about the latest in technology and innovation.</p>
+                <button class="register-btn">Register</button>
+            </div>
+
+            <div class="event-card">
+                <div class="event-image" style="background-image: url('https://source.unsplash.com/random/600x400/?design')"></div>
+                <h3>Design Workshop</h3>
+                <p>Improve your design skills with industry experts.</p>
+                <button class="register-btn">Register</button>
+            </div>
+        </div>
+
+        <div id="frameworkModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>Benefits of Modern Frameworks</h3>
+                <div class="framework-comparison">
+                    <div class="jquery-section">
+                        <h4>jQuery</h4>
+                        <ul>
+                            <li>Simplifies DOM manipulation</li>
+                            <li>Cross-browser compatibility</li>
+                            <li>Easy AJAX implementation</li>
+                            <li>Large plugin ecosystem</li>
+                        </ul>
+                    </div>
+                    <div class="modern-section">
+                        <h4>React/Vue/Angular</h4>
+                        <ul>
+                            <li>Component-based architecture</li>
+                            <li>Virtual DOM for better performance</li>
+                            <li>State management solutions</li>
+                            <li>Better developer experience</li>
+                            <li>Stronger community and tooling</li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="modal-btn">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+    // Cache DOM elements
+    const $eventsContainer = $('#eventsContainer');
+    const $toggleFadeBtn = $('#toggleFade');
+    const $addEventBtn = $('#addEvent');
+    const $frameworkInfoBtn = $('#frameworkInfo');
+    const $frameworkModal = $('#frameworkModal');
+    const $closeModal = $('.close-modal');
+    const $modalBtn = $('.modal-btn');
+    
+    // Event card templates
+    const eventTemplates = [
+        {
+            title: "Developer Meetup",
+            desc: "Network with fellow developers and share knowledge.",
+            image: "https://source.unsplash.com/random/600x400/?meetup"
+        },
+        {
+            title: "UX Design Seminar",
+            desc: "Learn the latest UX design principles and techniques.",
+            image: "https://source.unsplash.com/random/600x400/?ux"
+        },
+        {
+            title: "Startup Pitch Night",
+            desc: "Watch entrepreneurs pitch their ideas to investors.",
+            image: "https://source.unsplash.com/random/600x400/?startup"
+        },
+        {
+            title: "AI Workshop",
+            desc: "Hands-on workshop on artificial intelligence applications.",
+            image: "https://source.unsplash.com/random/600x400/?ai"
+        }
+    ];
+    
+    // Toggle fade for all event cards
+    $toggleFadeBtn.on('click', function() {
+        // Check if any cards are visible
+        const anyVisible = $('.event-card:visible').length > 0;
+        
+        if (anyVisible) {
+            // Fade out all visible cards
+            $('.event-card').fadeOut(500, function() {
+                console.log('All cards faded out');
+            });
+        } else {
+            // Fade in all cards one by one with delay
+            $('.event-card').each(function(index) {
+                $(this).delay(index * 200).fadeIn(500);
+            });
+        }
+    });
+    
+    // Add random event card
+    $addEventBtn.on('click', function() {
+        // Get random template
+        const randomTemplate = eventTemplates[Math.floor(Math.random() * eventTemplates.length)];
+        
+        // Create new card with fade in effect
+        const $newCard = $(
+            `<div class="event-card" style="display: none;">
+                <div class="event-image" style="background-image: url('${randomTemplate.image}')"></div>
+                <h3>${randomTemplate.title}</h3>
+                <p>${randomTemplate.desc}</p>
+                <button class="register-btn">Register</button>
+            </div>`
+        );
+        
+        // Append to container and fade in
+        $eventsContainer.append($newCard);
+        $newCard.fadeIn(800);
+        
+        // Add click handler to new button
+        $newCard.find('.register-btn').on('click', handleRegister);
+        
+        console.log('Added new event card:', randomTemplate.title);
+    });
+    
+    // Register button click handler
+    function handleRegister() {
+        const $card = $(this).closest('.event-card');
+        const eventName = $card.find('h3').text();
+        
+        // Change button state
+        $(this)
+            .text('Registered!')
+            .css('background-color', '#28a745')
+            .off('click');
+        
+        // Animate card briefly
+        $card
+            .css('box-shadow', '0 0 0 3px rgba(40, 167, 69, 0.5)')
+            .animate({
+                'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.1)'
+            }, 1000);
+        
+        console.log('Registered for:', eventName);
+    }
+    
+    // Add click handler to existing buttons
+    $('.register-btn').on('click', handleRegister);
+    
+    // Framework info modal
+    $frameworkInfoBtn.on('click', function() {
+        $frameworkModal.fadeIn(300);
+        console.log('Opened framework info modal');
+    });
+    
+    // Close modal
+    $closeModal.add($modalBtn).on('click', function() {
+        $frameworkModal.fadeOut(300);
+        console.log('Closed framework info modal');
+    });
+    
+    // Close modal when clicking outside
+    $(window).on('click', function(e) {
+        if ($(e.target).is($frameworkModal)) {
+            $frameworkModal.fadeOut(300);
+        }
+    });
+    
+    // Initial console log
+    console.log('jQuery example loaded successfully');
+    console.log('Try clicking the buttons to see jQuery in action!');
+    
+    // Keyboard shortcut for adding events
+    $(document).on('keydown', function(e) {
+        if (e.key === 'a' || e.key === 'A') {
+            $addEventBtn.trigger('click');
+        }
+    });
+});
+    </script>
+</body>
+</html>

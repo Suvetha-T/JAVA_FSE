@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Objects</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.hero {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.event-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.event-controls button {
+    background-color: #6e8efb;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.event-controls button:hover {
+    background-color: #5a7de3;
+}
+
+.output-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .output-area {
+        grid-template-columns: 1fr;
+    }
+}
+
+.event-list, .event-details, .object-info {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    min-height: 300px;
+}
+
+.event-list h2, .event-details h2, .object-info h2 {
+    color: #6e8efb;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.event-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.event-item:hover {
+    background-color: #e9ecef;
+    transform: translateX(5px);
+}
+
+.event-item h3 {
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.detail-item {
+    margin-bottom: 0.8rem;
+}
+
+.detail-item strong {
+    color: #495057;
+    display: inline-block;
+    min-width: 120px;
+}
+
+.availability {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.available {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.unavailable {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.object-entry {
+    font-family: monospace;
+    margin-bottom: 0.5rem;
+    padding: 0.3rem;
+    background-color: #f8f9fa;
+    border-radius: 3px;
+}
+
+.object-key {
+    color: #6e8efb;
+    font-weight: bold;
+}
+
+.object-value {
+    color: #28a745;
+}
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>Event Objects</h1>
+        <p>Modeling events with JavaScript objects and prototypes</p>
+    </header>
+    <main>
+        <div class="container">
+            <div class="event-controls">
+                <button id="showEventsBtn">Show All Events</button>
+                <button id="showDetailsBtn">Show Event Details</button>
+                <button id="checkAvailabilityBtn">Check Availability</button>
+            </div>
+            <div class="output-area">
+                <div class="event-list" id="eventList"></div>
+                <div class="event-details" id="eventDetails"></div>
+                <div class="object-info" id="objectInfo"></div>
+            </div>
+        </div>
+    </main>
+    <script>
+        
+function Event(name, date, totalSeats, category) {
+    this.name = name;
+    this.date = new Date(date);
+    this.totalSeats = totalSeats;
+    this.registeredSeats = 0;
+    this.category = category;
+    this.organizer = "Community Center";
+}
+
+
+Event.prototype.checkAvailability = function() {
+    return this.totalSeats - this.registeredSeats;
+};
+
+Event.prototype.register = function(seats = 1) {
+    if (this.checkAvailability() >= seats) {
+        this.registeredSeats += seats;
+        return true;
+    }
+    return false;
+};
+
+Event.prototype.getDetails = function() {
+    return {
+        name: this.name,
+        date: this.date.toLocaleDateString(),
+        seats: `${this.checkAvailability()} of ${this.totalSeats} available`,
+        category: this.category,
+        organizer: this.organizer
+    };
+};
+
+
+const events = [
+    new Event("Community Concert", "2023-12-15", 100, "music"),
+    new Event("Art Workshop", "2023-11-20", 20, "arts"),
+    new Event("Neighborhood Cleanup", "2023-11-25", 50, "volunteer")
+];
+
+
+events[0].register(45);
+events[1].register(15);
+events[2].register(30);
+
+const eventList = document.getElementById('eventList');
+const eventDetails = document.getElementById('eventDetails');
+const objectInfo = document.getElementById('objectInfo');
+const showEventsBtn = document.getElementById('showEventsBtn');
+const showDetailsBtn = document.getElementById('showDetailsBtn');
+const checkAvailabilityBtn = document.getElementById('checkAvailabilityBtn');
+
+
+function displayEvents() {
+    eventList.innerHTML = '<h2>All Community Events</h2>';
+    
+    events.forEach((event, index) => {
+        const eventItem = document.createElement('div');
+        eventItem.className = 'event-item';
+        eventItem.innerHTML = `
+            <h3>${event.name}</h3>
+            <p>Date: ${event.date.toLocaleDateString()}</p>
+            <p>Category: ${event.category}</p>
+        `;
+        eventItem.addEventListener('click', () => showEventDetails(index));
+        eventList.appendChild(eventItem);
+    });
+}
+
+
+function showEventDetails(index) {
+    const event = events[index];
+    const details = event.getDetails();
+    
+    eventDetails.innerHTML = `
+        <h2>Event Details</h2>
+        <div class="detail-item"><strong>Name:</strong> ${details.name}</div>
+        <div class="detail-item"><strong>Date:</strong> ${details.date}</div>
+        <div class="detail-item"><strong>Seats:</strong> ${details.seats}</div>
+        <div class="detail-item"><strong>Category:</strong> ${details.category}</div>
+        <div class="detail-item"><strong>Organizer:</strong> ${details.organizer}</div>
+        <div class="detail-item">
+            <strong>Status:</strong> 
+            <span class="availability ${event.checkAvailability() > 0 ? 'available' : 'unavailable'}">
+                ${event.checkAvailability() > 0 ? 'Available' : 'Sold Out'}
+            </span>
+        </div>
+    `;
+    
+    
+    showObjectStructure(event);
+}
+
+
+function showObjectStructure(obj) {
+    objectInfo.innerHTML = '<h2>Object Structure</h2>';
+    
+    Object.entries(obj).forEach(([key, value]) => {
+        const entry = document.createElement('div');
+        entry.className = 'object-entry';
+        
+        if (typeof value === 'function') {
+            entry.innerHTML = `<span class="object-key">${key}:</span> <span class="object-value">function() {...}</span>`;
+        } else if (value instanceof Date) {
+            entry.innerHTML = `<span class="object-key">${key}:</span> <span class="object-value">Date(${value.toLocaleDateString()})</span>`;
+        } else {
+            entry.innerHTML = `<span class="object-key">${key}:</span> <span class="object-value">${value}</span>`;
+        }
+        
+        objectInfo.appendChild(entry);
+    });
+}
+
+
+function checkAllAvailability() {
+    eventDetails.innerHTML = '<h2>Availability Check</h2>';
+    
+    events.forEach(event => {
+        const avail = event.checkAvailability();
+        const status = document.createElement('div');
+        status.className = 'detail-item';
+        status.innerHTML = `
+            <strong>${event.name}:</strong> 
+            <span class="availability ${avail > 0 ? 'available' : 'unavailable'}">
+                ${avail} seat${avail !== 1 ? 's' : ''} available
+            </span>
+        `;
+        eventDetails.appendChild(status);
+    });
+}
+
+
+showEventsBtn.addEventListener('click', displayEvents);
+showDetailsBtn.addEventListener('click', () => showEventDetails(0));
+checkAvailabilityBtn.addEventListener('click', checkAllAvailability);
+
+
+displayEvents();
+showEventDetails(0);
+    </script>
+</body>
+</html>

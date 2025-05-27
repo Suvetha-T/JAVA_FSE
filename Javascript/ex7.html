@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Manipulation</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.hero {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.event-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.event-controls button {
+    background-color: #6e8efb;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.event-controls button:hover {
+    background-color: #5a7de3;
+    transform: translateY(-2px);
+}
+
+#clearEventsBtn {
+    background-color: #ff6b6b;
+}
+
+#clearEventsBtn:hover {
+    background-color: #e05555;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.event-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.event-header {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.event-header h2 {
+    margin-bottom: 0.5rem;
+}
+
+.event-date {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.event-body {
+    padding: 1.5rem;
+}
+
+.event-description {
+    margin-bottom: 1.5rem;
+    color: #555;
+}
+
+.event-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-seats {
+    font-weight: bold;
+    color: #6e8efb;
+}
+
+.event-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.register-btn {
+    background-color: #6e8efb;
+    color: white;
+}
+
+.register-btn:hover {
+    background-color: #5a7de3;
+}
+
+.cancel-btn {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #e05555;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+    font-size: 1.2rem;
+}
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>Community Events</h1>
+        <p>Dynamic event display with DOM manipulation</p>
+    </header>
+    <main>
+        <div class="container">
+            <div class="event-controls">
+                <button id="addRandomBtn">Add Random Event</button>
+                <button id="clearEventsBtn">Clear All</button>
+            </div>
+            <div class="events-grid" id="eventsGrid"></div>
+        </div>
+    </main>
+    <script>
+const eventTemplates = [
+    {
+        name: "Community Concert",
+        date: "2023-12-15",
+        description: "Enjoy an evening of music from local artists. Bring your friends and family!",
+        totalSeats: 150,
+        category: "music"
+    },
+    {
+        name: "Art Workshop",
+        date: "2023-11-20",
+        description: "Learn painting techniques from professional artists. All materials provided.",
+        totalSeats: 20,
+        category: "arts"
+    },
+    {
+        name: "Neighborhood Cleanup",
+        date: "2023-11-25",
+        description: "Help keep our community clean and beautiful. Gloves and bags provided.",
+        totalSeats: 50,
+        category: "volunteer"
+    },
+    {
+        name: "Yoga in the Park",
+        date: "2023-12-02",
+        description: "Start your weekend with a relaxing yoga session. Bring your own mat.",
+        totalSeats: 30,
+        category: "fitness"
+    }
+];
+
+let events = [];
+
+const eventsGrid = document.getElementById('eventsGrid');
+const addRandomBtn = document.getElementById('addRandomBtn');
+const clearEventsBtn = document.getElementById('clearEventsBtn');
+
+function createEventCard(event) {
+    const eventCard = document.createElement('div');
+    eventCard.className = 'event-card';
+    
+    const eventDate = new Date(event.date);
+    const formattedDate = eventDate.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+    
+    eventCard.innerHTML = `
+        <div class="event-header">
+            <h2>${event.name}</h2>
+            <p class="event-date">${formattedDate}</p>
+        </div>
+        <div class="event-body">
+            <p class="event-description">${event.description}</p>
+            <div class="event-meta">
+                <span class="event-seats">${event.availableSeats} / ${event.totalSeats} seats available</span>
+                <div class="event-actions">
+                    <button class="action-btn register-btn" data-id="${event.id}">Register</button>
+                    <button class="action-btn cancel-btn" data-id="${event.id}">Cancel</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    
+    eventCard.querySelector('.register-btn').addEventListener('click', () => registerForEvent(event.id));
+    eventCard.querySelector('.cancel-btn').addEventListener('click', () => cancelRegistration(event.id));
+    
+    return eventCard;
+}
+
+
+function displayEvents() {
+    eventsGrid.innerHTML = '';
+    
+    if (events.length === 0) {
+        eventsGrid.innerHTML = '<div class="empty-state">No events scheduled yet. Add some events to get started!</div>';
+        return;
+    }
+    
+    events.forEach(event => {
+        const eventCard = createEventCard(event);
+        eventsGrid.appendChild(eventCard);
+    });
+}
+
+
+function addRandomEvent() {
+    const randomTemplate = eventTemplates[Math.floor(Math.random() * eventTemplates.length)];
+    const newEvent = {
+        ...randomTemplate,
+        id: Date.now(),
+        availableSeats: randomTemplate.totalSeats
+    };
+    
+    events.push(newEvent);
+    displayEvents();
+}
+
+
+function registerForEvent(eventId) {
+    const event = events.find(e => e.id === eventId);
+    
+    if (event && event.availableSeats > 0) {
+        event.availableSeats--;
+        displayEvents();
+    } else {
+        alert('Sorry, no seats available for this event!');
+    }
+}
+
+function cancelRegistration(eventId) {
+    const event = events.find(e => e.id === eventId);
+    
+    if (event && event.availableSeats < event.totalSeats) {
+        event.availableSeats++;
+        displayEvents();
+    }
+}
+function clearAllEvents() {
+    events = [];
+    displayEvents();
+}
+
+
+addRandomBtn.addEventListener('click', addRandomEvent);
+clearEventsBtn.addEventListener('click', clearAllEvents);
+
+
+addRandomEvent();</script>
+</body>
+</html>

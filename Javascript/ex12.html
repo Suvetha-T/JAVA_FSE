@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Explorer - Registration API</title>
+    <style>
+        :root {
+    --primary-color: #6c63ff;
+    --secondary-color: #4d44db;
+    --accent-color: #ff6584;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --gray-color: #6c757d;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f5f7;
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.event-info {
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.event-image {
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+}
+
+.event-info h2 {
+    padding: 1.5rem 1.5rem 0.5rem;
+    color: var(--dark-color);
+}
+
+.event-info p {
+    padding: 0 1.5rem 1rem;
+    color: var(--gray-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.event-info p i {
+    color: var(--primary-color);
+    width: 20px;
+}
+
+.event-description {
+    padding: 1rem 1.5rem 2rem !important;
+    line-height: 1.7;
+}
+
+.registration-form {
+    background-color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.registration-form h3 {
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+
+.error-message {
+    color: var(--danger-color);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    height: 1rem;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox-group input {
+    width: auto;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+.checkbox-group a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.checkbox-group a:hover {
+    text-decoration: underline;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.submit-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.submit-btn:disabled {
+    background-color: var(--gray-color);
+    cursor: not-allowed;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--gray-color);
+}
+
+.modal-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+#successModal .modal-icon {
+    color: var(--success-color);
+}
+
+#errorModal .modal-icon {
+    color: var(--danger-color);
+}
+
+.modal h3 {
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+}
+
+.modal p {
+    margin-bottom: 2rem;
+    color: var(--gray-color);
+}
+
+.modal-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr;
+    }
+    
+    .event-info {
+        order: 2;
+    }
+    
+    .registration-form {
+        order: 1;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calendar-alt"></i> Event Registration</h1>
+        </header>
+
+        <div class="content">
+            <div class="event-info">
+                <div class="event-image" style="background-image: url('https://source.unsplash.com/random/800x600/?conference')"></div>
+                <h2>Tech Conference 2023</h2>
+                <p class="event-date"><i class="fas fa-calendar-day"></i> November 15-17, 2023</p>
+                <p class="event-location"><i class="fas fa-map-marker-alt"></i> Convention Center, Downtown</p>
+                <p class="event-description">Join us for the biggest tech conference of the year featuring keynote speakers, workshops, and networking opportunities with industry leaders.</p>
+            </div>
+
+            <form id="registrationForm" class="registration-form">
+                <h3>Register Now</h3>
+                
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                    <div class="error-message" id="nameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone">
+                    <div class="error-message" id="phoneError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ticketType">Ticket Type</label>
+                    <select id="ticketType" name="ticketType" required>
+                        <option value="">Select an option</option>
+                        <option value="general">General Admission ($199)</option>
+                        <option value="vip">VIP Pass ($499)</option>
+                        <option value="student">Student Pass ($99)</option>
+                    </select>
+                    <div class="error-message" id="ticketError"></div>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="newsletter" name="newsletter" checked>
+                    <label for="newsletter">Subscribe to our newsletter</label>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">I agree to the <a href="#">terms and conditions</a></label>
+                    <div class="error-message" id="termsError"></div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="submitText">Complete Registration</span>
+                    <div id="submitSpinner" class="spinner hidden"></div>
+                </button>
+            </form>
+        </div>
+
+        <div id="successModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-icon"><i class="fas fa-check-circle"></i></div>
+                <h3>Registration Successful!</h3>
+                <p id="successMessage">Thank you for registering for Tech Conference 2023. We've sent a confirmation email to your address.</p>
+                <button id="closeSuccessModal" class="modal-btn">Great, thanks!</button>
+            </div>
+        </div>
+
+        <div id="errorModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-icon"><i class="fas fa-exclamation-circle"></i></div>
+                <h3>Registration Failed</h3>
+                <p id="errorMessage">There was an error processing your registration. Please try again later.</p>
+                <button id="closeErrorModal" class="modal-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // DOM elements
+    const registrationForm = document.getElementById('registrationForm');
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const ticketTypeSelect = document.getElementById('ticketType');
+    const termsCheckbox = document.getElementById('terms');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const successModal = document.getElementById('successModal');
+    const errorModal = document.getElementById('errorModal');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const closeModalBtns = document.querySelectorAll('.close-modal');
+    const closeSuccessModalBtn = document.getElementById('closeSuccessModal');
+    const closeErrorModalBtn = document.getElementById('closeErrorModal');
+
+    // Error elements
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const phoneError = document.getElementById('phoneError');
+    const ticketError = document.getElementById('ticketError');
+    const termsError = document.getElementById('termsError');
+
+    // Mock API URL
+    const mockApiUrl = 'https://run.mocky.io/v3/1a9c3b1a-3e9f-4a9c-8e1a-1a9c3b1a3e9f';
+
+    // Form submission handler
+    registrationForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Reset error messages
+        resetErrors();
+        
+        // Validate form
+        const isValid = validateForm();
+        
+        if (isValid) {
+            // Get form data
+            const formData = {
+                fullName: fullNameInput.value.trim(),
+                email: emailInput.value.trim(),
+                phone: phoneInput.value.trim(),
+                ticketType: ticketTypeSelect.value,
+                newsletter: document.getElementById('newsletter').checked
+            };
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitText.textContent = 'Processing...';
+            submitSpinner.classList.remove('hidden');
+            
+            try {
+                // Simulate API call with delay
+                const response = await mockApiCall(formData);
+                
+                // Show success message
+                successMessage.textContent = response.message || 'Thank you for registering for Tech Conference 2023. We\'ve sent a confirmation email to your address.';
+                showModal(successModal);
+                
+                // Reset form
+                registrationForm.reset();
+            } catch (error) {
+                // Show error message
+                errorMessage.textContent = error.message || 'There was an error processing your registration. Please try again later.';
+                showModal(errorModal);
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitText.textContent = 'Complete Registration';
+                submitSpinner.classList.add('hidden');
+            }
+        }
+    });
+
+    // Mock API call function with delay
+    async function mockApiCall(formData) {
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Simulate random success/failure
+        const isSuccess = Math.random() > 0.2; // 80% success rate
+        
+        if (isSuccess) {
+            return {
+                success: true,
+                message: `Thank you, ${formData.fullName}! Your registration for the ${formData.ticketType} ticket was successful. A confirmation has been sent to ${formData.email}.`,
+                data: formData
+            };
+        } else {
+            throw new Error('Server error: Unable to process registration at this time.');
+        }
+    }
+
+    // Validation functions
+    function validateForm() {
+        let isValid = true;
+        
+        // Validate full name
+        if (fullNameInput.value.trim() === '') {
+            nameError.textContent = 'Full name is required';
+            fullNameInput.classList.add('error');
+            isValid = false;
+        } else if (fullNameInput.value.trim().length < 3) {
+            nameError.textContent = 'Name must be at least 3 characters';
+            fullNameInput.classList.add('error');
+            isValid = false;
+        }
+        
+        // Validate email
+        if (emailInput.value.trim() === '') {
+            emailError.textContent = 'Email is required';
+            emailInput.classList.add('error');
+            isValid = false;
+        } else if (!isValidEmail(emailInput.value.trim())) {
+            emailError.textContent = 'Please enter a valid email';
+            emailInput.classList.add('error');
+            isValid = false;
+        }
+        
+        // Validate phone (optional)
+        if (phoneInput.value.trim() !== '' && !isValidPhone(phoneInput.value.trim())) {
+            phoneError.textContent = 'Please enter a valid phone number';
+            phoneInput.classList.add('error');
+            isValid = false;
+        }
+        
+        // Validate ticket type
+        if (ticketTypeSelect.value === '') {
+            ticketError.textContent = 'Please select a ticket type';
+            ticketTypeSelect.classList.add('error');
+            isValid = false;
+        }
+        
+        // Validate terms checkbox
+        if (!termsCheckbox.checked) {
+            termsError.textContent = 'You must agree to the terms';
+            termsCheckbox.classList.add('error');
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+    
+    function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    
+    function isValidPhone(phone) {
+        const re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+        return re.test(phone);
+    }
+    
+    function resetErrors() {
+        // Clear error messages
+        nameError.textContent = '';
+        emailError.textContent = '';
+        phoneError.textContent = '';
+        ticketError.textContent = '';
+        termsError.textContent = '';
+        
+        // Remove error classes
+        fullNameInput.classList.remove('error');
+        emailInput.classList.remove('error');
+        phoneInput.classList.remove('error');
+        ticketTypeSelect.classList.remove('error');
+        termsCheckbox.classList.remove('error');
+    }
+
+    // Modal functions
+    function showModal(modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('visible');
+    }
+    
+    function hideModal(modal) {
+        modal.classList.remove('visible');
+        modal.classList.add('hidden');
+    }
+
+    // Event listeners for modals
+    closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            hideModal(modal);
+        });
+    });
+    
+    closeSuccessModalBtn.addEventListener('click', () => hideModal(successModal));
+    closeErrorModalBtn.addEventListener('click', () => hideModal(errorModal));
+    
+    // Close modal when clicking outside
+    [successModal, errorModal].forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                hideModal(modal);
+            }
+        });
+    });
+    
+    // Real-time validation for name
+    fullNameInput.addEventListener('input', function() {
+        if (this.value.trim() !== '' && this.value.trim().length >= 3) {
+            nameError.textContent = '';
+            this.classList.remove('error');
+        }
+    });
+    
+    // Real-time validation for email
+    emailInput.addEventListener('input', function() {
+        if (this.value.trim() !== '' && isValidEmail(this.value.trim())) {
+            emailError.textContent = '';
+            this.classList.remove('error');
+        }
+    });
+    
+    // Real-time validation for phone
+    phoneInput.addEventListener('input', function() {
+        if (this.value.trim() === '' || isValidPhone(this.value.trim())) {
+            phoneError.textContent = '';
+            this.classList.remove('error');
+    }
+    </script>
+</body>
+</html>

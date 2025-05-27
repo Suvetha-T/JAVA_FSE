@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Listings</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.hero {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.filter-controls {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-controls label {
+    font-weight: bold;
+    color: #555;
+}
+
+.filter-controls select, .filter-controls button {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+}
+
+.filter-controls button {
+    background-color: #6e8efb;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filter-controls button:hover {
+    background-color: #5a7de3;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.event-item {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.event-item:hover {
+    transform: translateY(-5px);
+}
+
+.event-item.past {
+    opacity: 0.7;
+    position: relative;
+}
+
+.event-item.past::after {
+    content: "PAST EVENT";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff6b6b;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.event-item.full {
+    position: relative;
+}
+
+.event-item.full::after {
+    content: "SOLD OUT";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #555;
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.event-image {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+}
+
+.event-content {
+    padding: 1.5rem;
+}
+
+.event-content h3 {
+    color: #6e8efb;
+    margin-bottom: 0.5rem;
+}
+
+.event-date {
+    color: #777;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.event-description {
+    margin-bottom: 1.5rem;
+    color: #555;
+}
+
+.event-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.event-seats {
+    font-weight: bold;
+    color: #6e8efb;
+}
+
+.register-btn {
+    background-color: #6e8efb;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-btn:hover {
+    background-color: #5a7de3;
+}
+
+.register-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: #ff6b6b;
+    text-align: center;
+    padding: 2rem;
+    font-weight: bold;
+}
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>Community Events</h1>
+        <p>Find and join upcoming events in your area</p>
+    </header>
+    <main>
+        <div class="container">
+            <div class="filter-controls">
+                <label for="dateFilter">Filter by:</label>
+                <select id="dateFilter">
+                    <option value="all">All Events</option>
+                    <option value="upcoming">Upcoming Only</option>
+                    <option value="past">Past Events</option>
+                </select>
+                <button id="applyFilter">Apply Filter</button>
+            </div>
+            <div class="events-grid" id="eventsContainer">
+                
+            </div>
+        </div>
+    </main>
+    <script >
+    
+const events = [
+    {
+        id: 1,
+        name: "Community Garden Planting",
+        date: "2023-11-15",
+        description: "Help plant flowers and vegetables in our community garden. Tools and gloves provided.",
+        seats: 15,
+        image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae",
+        category: "outdoor"
+    },
+    {
+        id: 2,
+        name: "Local Art Exhibition",
+        date: "2023-10-10",
+        description: "View artwork from local artists and meet the creators.",
+        seats: 0,
+        image: "https://images.unsplash.com/photo-1536922246289-88c42f957773",
+        category: "arts"
+    },
+    {
+        id: 3,
+        name: "Neighborhood Cleanup",
+        date: "2023-11-20",
+        description: "Join your neighbors to clean up local parks and streets.",
+        seats: 30,
+        image: "https://images.unsplash.com/photo-1600566752355-35792bedcfea",
+        category: "volunteer"
+    },
+    {
+        id: 4,
+        name: "Yoga in the Park",
+        date: "2023-09-05",
+        description: "Beginner-friendly yoga session in the community park.",
+        seats: 5,
+        image: "https://images.unsplash.com/photo-1545205597-3d9d02c29597",
+        category: "fitness"
+    }
+];
+
+const eventsContainer = document.getElementById('eventsContainer');
+const dateFilter = document.getElementById('dateFilter');
+const applyFilterBtn = document.getElementById('applyFilter');
+
+function displayEvents(filter = 'upcoming') {
+    eventsContainer.innerHTML = '';
+    
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        let filteredEvents = events;
+        
+        if (filter === 'upcoming') {
+            filteredEvents = events.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate >= today && event.seats > 0;
+            });
+        } else if (filter === 'past') {
+            filteredEvents = events.filter(event => {
+                const eventDate = new Date(event.date);
+                return eventDate < today;
+            });
+        }
+        
+        if (filteredEvents.length === 0) {
+            eventsContainer.innerHTML = '<div class="error-message">No events found matching your criteria.</div>';
+            return;
+        }
+        
+        filteredEvents.forEach(event => {
+            const eventDate = new Date(event.date);
+            const isPast = eventDate < today;
+            const isFull = event.seats <= 0;
+            
+            const eventElement = document.createElement('div');
+            eventElement.className = `event-item ${isPast ? 'past' : ''} ${isFull ? 'full' : ''}`;
+            
+            eventElement.innerHTML = `
+                <div class="event-image" style="background-image: url(${event.image})"></div>
+                <div class="event-content">
+                    <h3>${event.name}</h3>
+                    <p class="event-date">${eventDate.toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    })}</p>
+                    <p class="event-description">${event.description}</p>
+                    <div class="event-meta">
+                        <span class="event-seats">Seats: ${event.seats}</span>
+                        <button class="register-btn" data-id="${event.id}" ${isPast || isFull ? 'disabled' : ''}>
+                            ${isPast ? 'Event Ended' : isFull ? 'Sold Out' : 'Register'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            eventsContainer.appendChild(eventElement);
+        });
+        
+        
+        document.querySelectorAll('.register-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const eventId = parseInt(this.getAttribute('data-id'));
+                registerForEvent(eventId);
+            });
+        });
+    } catch (error) {
+        console.error("Error displaying events:", error);
+        eventsContainer.innerHTML = '<div class="error-message">An error occurred while loading events. Please try again later.</div>';
+    }
+}
+
+
+function registerForEvent(eventId) {
+    try {
+        const event = events.find(e => e.id === eventId);
+        if (!event) throw new Error("Event not found");
+        
+        if (event.seats <= 0) {
+            alert("Sorry, this event is fully booked!");
+            return;
+        }
+        
+        event.seats--;
+        displayEvents(dateFilter.value);
+        alert(`Successfully registered for ${event.name}!`);
+    } catch (error) {
+        console.error("Registration error:", error);
+        alert("There was an error processing your registration. Please try again.");
+    }
+}
+
+
+displayEvents();
+
+
+applyFilterBtn.addEventListener('click', () => {
+    displayEvents(dateFilter.value);
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Explorer - Debugging</title>
+    <style>
+        :root {
+    --primary-color: #6c63ff;
+    --secondary-color: #4d44db;
+    --accent-color: #ff6584;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --gray-color: #6c757d;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --debug-color: #17a2b8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f5f7;
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    color: var(--debug-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.debug-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.debug-controls button {
+    padding: 0.5rem 1rem;
+    background-color: var(--debug-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.debug-controls button:hover {
+    background-color: #138496;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.registration-form {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.registration-form h3 {
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--debug-color);
+    box-shadow: 0 0 0 2px rgba(23, 162, 184, 0.2);
+}
+
+.error-message {
+    color: var(--danger-color);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    height: 1rem;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--debug-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.submit-btn:hover {
+    background-color: #138496;
+}
+
+.debug-panel {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    border: 1px dashed var(--debug-color);
+}
+
+.debug-panel h3 {
+    color: var(--debug-color);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.debug-panel h3::before {
+    content: "🛠";
+}
+
+.debug-output {
+    background-color: white;
+    border-radius: 4px;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 0.9rem;
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+.debug-output p {
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.debug-log {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.debug-log.error {
+    color: var(--danger-color);
+}
+
+.debug-log.success {
+    color: var(--success-color);
+}
+
+.debug-log.info {
+    color: var(--debug-color);
+}
+
+@media (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bug"></i> Debug Registration</h1>
+            <div class="debug-controls">
+                <button id="toggleDebug">Toggle Debug Mode</button>
+                <button id="clearConsole">Clear Console</button>
+            </div>
+        </header>
+
+        <div class="content">
+            <form id="registrationForm" class="registration-form">
+                <h3>Register for Event</h3>
+                
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                    <div class="error-message" id="nameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="event">Select Event</label>
+                    <select id="event" name="event" required>
+                        <option value="">Choose an event</option>
+                        <option value="conf1">Tech Conference</option>
+                        <option value="conf2">Design Summit</option>
+                        <option value="conf3">Marketing Workshop</option>
+                    </select>
+                    <div class="error-message" id="eventError"></div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="registerBtn">
+                    Register Now
+                </button>
+            </form>
+
+            <div class="debug-panel">
+                <h3>Debug Information</h3>
+                <div class="debug-output" id="debugOutput">
+                    <p>Debug information will appear here when in debug mode.</p>
+                    <p>Open browser console (F12) for more detailed logs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Debug mode flag
+    let debugMode = false;
+    
+    // DOM elements
+    const registrationForm = document.getElementById('registrationForm');
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    const eventSelect = document.getElementById('event');
+    const registerBtn = document.getElementById('registerBtn');
+    const toggleDebugBtn = document.getElementById('toggleDebug');
+    const clearConsoleBtn = document.getElementById('clearConsole');
+    const debugOutput = document.getElementById('debugOutput');
+    
+    // Error elements
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const eventError = document.getElementById('eventError');
+    
+    // Toggle debug mode
+    toggleDebugBtn.addEventListener('click', function() {
+        debugMode = !debugMode;
+        this.textContent = debugMode ? 'Disable Debug Mode' : 'Enable Debug Mode';
+        this.style.backgroundColor = debugMode ? '#dc3545' : '#17a2b8';
+        
+        if (debugMode) {
+            debugOutput.innerHTML = '<p class="debug-log info">Debug mode enabled. Form interactions will be logged here.</p>';
+            console.log('%cDebug mode enabled', 'color: #17a2b8; font-weight: bold');
+        } else {
+            debugOutput.innerHTML = '<p>Debug mode disabled. Enable to see debug information.</p>';
+            console.log('%cDebug mode disabled', 'color: #6c757d; font-weight: bold');
+        }
+    });
+    
+    // Clear console
+    clearConsoleBtn.addEventListener('click', function() {
+        if (debugMode) {
+            debugOutput.innerHTML = '<p class="debug-log info">Console cleared.</p>';
+        }
+        console.clear();
+    });
+    
+    // Form submission handler
+    registrationForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Debug: Log form submission start
+        debugLog('Form submission started', 'info');
+        console.group('Form Submission');
+        console.log('Form submission started at:', new Date().toISOString());
+        
+        // Reset errors
+        resetErrors();
+        
+        // Validate form
+        const isValid = validateForm();
+        
+        if (isValid) {
+            // Debug: Log validation success
+            debugLog('Form validation passed', 'success');
+            console.log('Form validation passed');
+            
+            // Get form data
+            const formData = {
+                name: fullNameInput.value.trim(),
+                email: emailInput.value.trim(),
+                event: eventSelect.value
+            };
+            
+            // Debug: Log form data
+            debugLog(`Submitting data: ${JSON.stringify(formData)}`, 'info');
+            console.log('Form data:', formData);
+            
+            // Add breakpoint for debugging
+            if (debugMode) {
+                debugger; // This will pause execution if dev tools are open
+            }
+            
+            // Simulate API call
+            simulateApiCall(formData)
+                .then(response => {
+                    // Debug: Log success response
+                    debugLog(`API Response: ${response.message}`, 'success');
+                    console.log('API Response:', response);
+                    
+                    // Show success (in a real app, this would be a proper notification)
+                    alert(response.message);
+                })
+                .catch(error => {
+                    // Debug: Log error
+                    debugLog(`API Error: ${error.message}`, 'error');
+                    console.error('API Error:', error);
+                    
+                    // Show error (in a real app, this would be a proper error message)
+                    alert(error.message);
+                })
+                .finally(() => {
+                    console.groupEnd();
+                });
+        } else {
+            // Debug: Log validation failure
+            debugLog('Form validation failed', 'error');
+            console.log('Form validation failed');
+            console.groupEnd();
+        }
+    });
+    
+    // Simulate API call with potential failure
+    function simulateApiCall(data) {
+        return new Promise((resolve, reject) => {
+            // Debug: Log API call start
+            debugLog('Making API call...', 'info');
+            console.log('Making API call with data:', data);
+            
+            // Simulate network delay
+            setTimeout(() => {
+                // Simulate random success/failure (20% chance of failure for debugging)
+                const shouldFail = Math.random() < 0.2;
+                
+                if (shouldFail) {
+                    // Debug: Log simulated failure
+                    debugLog('API call failed (simulated)', 'error');
+                    console.error('Simulated API failure');
+                    
+                    reject({
+                        status: 500,
+                        message: 'Server error: Unable to process registration at this time.'
+                    });
+                } else {
+                    // Debug: Log success
+                    debugLog('API call succeeded (simulated)', 'success');
+                    console.log('Simulated API success');
+                    
+                    resolve({
+                        status: 200,
+                        message: `Thank you, ${data.name}! You are registered for ${getEventName(data.event)}. Confirmation sent to ${data.email}.`,
+                        data: data
+                    });
+                }
+            }, 1500);
+        });
+    }
+    
+    // Helper function to get event name
+    function getEventName(eventId) {
+        const events = {
+            'conf1': 'Tech Conference',
+            'conf2': 'Design Summit',
+            'conf3': 'Marketing Workshop'
+        };
+        return events[eventId] || 'the selected event';
+    }
+    
+    // Validate form
+    function validateForm() {
+        let isValid = true;
+        
+        // Validate full name
+        if (fullNameInput.value.trim() === '') {
+            nameError.textContent = 'Full name is required';
+            fullNameInput.classList.add('error');
+            isValid = false;
+            
+            // Debug: Log validation error
+            debugLog('Validation error: Full name is required', 'error');
+            console.log('Validation error: Full name is required');
+        }
+        
+        // Validate email
+        if (emailInput.value.trim() === '') {
+            emailError.textContent = 'Email is required';
+            emailInput.classList.add('error');
+            isValid = false;
+            
+            // Debug: Log validation error
+            debugLog('Validation error: Email is required', 'error');
+            console.log('Validation error: Email is required');
+        } else if (!isValidEmail(emailInput.value.trim())) {
+            emailError.textContent = 'Please enter a valid email';
+            emailInput.classList.add('error');
+            isValid = false;
+            
+            // Debug: Log validation error
+            debugLog('Validation error: Invalid email format', 'error');
+            console.log('Validation error: Invalid email format');
+        }
+        
+        // Validate event selection
+        if (eventSelect.value === '') {
+            eventError.textContent = 'Please select an event';
+            eventSelect.classList.add('error');
+            isValid = false;
+            
+            // Debug: Log validation error
+            debugLog('Validation error: No event selected', 'error');
+            console.log('Validation error: No event selected');
+        }
+        
+        return isValid;
+    }
+    
+    // Email validation
+    function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    
+    // Reset errors
+    function resetErrors() {
+        nameError.textContent = '';
+        emailError.textContent = '';
+        eventError.textContent = '';
+        
+        fullNameInput.classList.remove('error');
+        emailInput.classList.remove('error');
+        eventSelect.classList.remove('error');
+    }
+    
+    // Debug logging
+    function debugLog(message, type = 'info') {
+        if (debugMode) {
+            const logElement = document.createElement('p');
+            logElement.className = `debug-log ${type}`;
+            logElement.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            debugOutput.appendChild(logElement);
+            debugOutput.scrollTop = debugOutput.scrollHeight;
+        }
+    }
+    
+    // Initial debug message
+    debugLog('Debugger initialized. Enable debug mode to start logging.', 'info');
+    console.log('Debugger initialized. Enable debug mode to start logging.');
+});
+    </script>
+</body>
+</html>

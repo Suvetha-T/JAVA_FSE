@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array Methods</title>
+   <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.hero {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+    .controls {
+        grid-template-columns: 1fr;
+    }
+}
+
+.control-group {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.control-group h2 {
+    color: #6e8efb;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.form-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.form-group input, .form-group select {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    flex-grow: 1;
+    min-width: 150px;
+}
+
+button {
+    background-color: #6e8efb;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #5a7de3;
+    transform: translateY(-2px);
+}
+
+#showMusicBtn {
+    background-color: #a777e3;
+}
+
+#showMusicBtn:hover {
+    background-color: #8e5fd3;
+}
+
+#formatTitlesBtn {
+    background-color: #06d6a0;
+}
+
+#formatTitlesBtn:hover {
+    background-color: #05b386;
+}
+
+.events-display {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.events-display h2 {
+    color: #6e8efb;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.events-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.event-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.event-card h3 {
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.event-card p {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.music-event {
+    border-left: 4px solid #a777e3;
+}
+
+.workshop-event {
+    border-left: 4px solid #ffd166;
+}
+
+.sports-event {
+    border-left: 4px solid #06d6a0;
+}
+
+.food-event {
+    border-left: 4px solid #ef476f;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+}
+   </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>Array Methods</h1>
+        <p>Managing community events with array operations</p>
+    </header>
+    <main>
+        <div class="container">
+            <div class="controls">
+                <div class="control-group">
+                    <h2>Add New Event</h2>
+                    <div class="form-group">
+                        <input type="text" id="newEventName" placeholder="Event name">
+                        <select id="newEventCategory">
+                            <option value="music">Music</option>
+                            <option value="workshop">Workshop</option>
+                            <option value="sports">Sports</option>
+                            <option value="food">Food</option>
+                        </select>
+                        <button id="addEventBtn">Add Event</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <h2>Filter Events</h2>
+                    <div class="form-group">
+                        <button id="showAllBtn">Show All</button>
+                        <button id="showMusicBtn">Music Only</button>
+                        <button id="formatTitlesBtn">Format Titles</button>
+                    </div>
+                </div>
+            </div>
+            <div class="events-display">
+                <h2>Community Events</h2>
+                <div class="events-container" id="eventsContainer"></div>
+            </div>
+        </div>
+    </main>
+    <script >
+        
+let events = [
+    { id: 1, name: "jazz night", category: "music", attendees: 45 },
+    { id: 2, name: "baking bread", category: "workshop", attendees: 12 },
+    { id: 3, name: "community run", category: "sports", attendees: 78 },
+    { id: 4, name: "summer concert", category: "music", attendees: 120 },
+    { id: 5, name: "farmers market", category: "food", attendees: 200 }
+];
+
+const eventsContainer = document.getElementById('eventsContainer');
+const newEventName = document.getElementById('newEventName');
+const newEventCategory = document.getElementById('newEventCategory');
+const addEventBtn = document.getElementById('addEventBtn');
+const showAllBtn = document.getElementById('showAllBtn');
+const showMusicBtn = document.getElementById('showMusicBtn');
+const formatTitlesBtn = document.getElementById('formatTitlesBtn');
+
+
+function displayEvents(eventsToShow) {
+    eventsContainer.innerHTML = '';
+    
+    if (eventsToShow.length === 0) {
+        eventsContainer.innerHTML = '<div class="empty-state">No events found matching your criteria.</div>';
+        return;
+    }
+    
+    eventsToShow.forEach(event => {
+        const eventCard = document.createElement('div');
+        eventCard.className = `event-card ${event.category}-event`;
+        
+        eventCard.innerHTML = `
+            <h3>${event.name}</h3>
+            <p>Category: ${event.category}</p>
+            <p>Attendees: ${event.attendees}</p>
+        `;
+        
+        eventsContainer.appendChild(eventCard);
+    });
+}
+
+
+function addEvent() {
+    const name = newEventName.value.trim();
+    const category = newEventCategory.value;
+    
+    if (!name) {
+        alert('Please enter an event name');
+        return;
+    }
+    
+    const newEvent = {
+        id: events.length + 1,
+        name,
+        category,
+        attendees: 0
+    };
+    
+    events.push(newEvent);
+    displayEvents(events);
+    newEventName.value = '';
+    newEventName.focus();
+}
+
+
+function filterMusicEvents() {
+    const musicEvents = events.filter(event => event.category === 'music');
+    displayEvents(musicEvents);
+}
+
+
+function formatEventTitles() {
+    const formattedEvents = events.map(event => {
+        
+        const formattedName = event.name.split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+        
+        
+        if (event.category === 'workshop') {
+            return {
+                ...event,
+                name: `Workshop on ${formattedName}`
+            };
+        }
+        
+        return {
+            ...event,
+            name: formattedName
+        };
+    });
+    
+    displayEvents(formattedEvents);
+}
+
+
+addEventBtn.addEventListener('click', addEvent);
+showAllBtn.addEventListener('click', () => displayEvents(events));
+showMusicBtn.addEventListener('click', filterMusicEvents);
+formatTitlesBtn.addEventListener('click', formatEventTitles);
+
+
+displayEvents(events);
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Footer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-bottom: 60px; /* Equal to footer height */
+            min-height: 100vh;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .footer {
+            height: 60px;
+            background-color: #343a40;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Fixed Footer Example</a>
+        </div>
+    </nav>
+    
+    <div class="container main-content">
+        <h1 class="mt-4">Main Content</h1>
+        <p>This page demonstrates a fixed footer using Bootstrap's <code>position-fixed</code> and <code>bottom-0</code> classes.</p>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Content Example</h5>
+                <p class="card-text">Scroll down to see how the footer stays fixed at the bottom of the viewport.</p>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor.</p>
+                <p class="card-text">Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus.</p>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">More Content</h5>
+                <p class="card-text">This is additional content to make the page scrollable.</p>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus

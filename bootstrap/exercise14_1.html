@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Utilities</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .box {
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: white;
+            border-radius: 5px;
+        }
+        .box-1 {
+            background-color: #0d6efd;
+        }
+        .box-2 {
+            background-color: #198754;
+        }
+        .box-3 {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Responsive Display Utilities</h1>
+        
+        <div class="alert alert-info mb-4">
+            Resize your browser window to see how the display classes work at different breakpoints.
+        </div>
+        
+        <div class="row">
+            <div class="col-12 mb-4">
+                <h3>Box 1: Hidden on mobile, visible on md and up</h3>
+                <div class="box box-1 d-none d-md-block">
+                    This box is hidden on mobile (d-none) and visible on medium screens and up (d-md-block)
+                </div>
+            </div>
+            
+            <div class="col-12 mb-4">
+                <h3>Box 2: Flex column on mobile, row on lg</h3>
+                <div class="d-flex flex-column d-lg-flex flex-lg-row gap-3">
+                    <div class="box box-2 flex-grow-1">Flex Item 1</div>
+                    <div class="box box-2 flex-grow-1">Flex Item 2</div>
+                    <div class="box box-2 flex-grow-1">Flex Item 3</div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <h3>Box 3: Hidden on lg and up</h3>
+                <div class="box box-3 d-lg-none">
+                    This box is visible by default but hidden on large screens and up (d-lg-none)
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

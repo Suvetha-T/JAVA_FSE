@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overlay Badge</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .image-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .product-card {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Overlay Badge on Image</h1>
+        
+        <div class="image-container">
+            <div class="product-card">
+                <div class="position-relative">
+                    <img src="https://via.placeholder.com/800x400" class="img-fluid rounded" alt="Product">
+                    <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
+                        New
+                    </span>
+                    <span class="position-absolute top-0 end-0 badge bg-dark rounded-0 rounded-top">
+                        -30%
+                    </span>
+                </div>
+                <div class="mt-3">
+                    <h3>Product Name</h3>
+                    <p>This product image has two badges positioned absolutely over it using Bootstrap's positioning utilities.</p>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="position-relative d-inline-block">
+                    <img src="https://via.placeholder.com/300" class="rounded-circle border border-3 border-primary" alt="Profile">
+                    <span class="position-absolute bottom-0 end-0 translate-middle p-2 bg-success border border-light rounded-circle">
+                        <span class="visually-hidden">Online</span>
+                    </span>
+                </div>
+                <div class="mt-3">
+                    <h3>User Profile</h3>
+                    <p>This profile image has a green dot indicator positioned at the bottom right using <code>.position-absolute</code>, <code>.bottom-0</code>, and <code>.end-0</code>.</p>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="position-relative">
+                    <img src="https://via.placeholder.com/800x300" class="img-fluid rounded-3" alt="Banner">
+                    <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                        <h2 class="fw-bold">Summer Sale</h2>
+                        <p class="lead">Up to 50% off</p>
+                        <button class="btn btn-light rounded-pill px-4">Shop Now</button>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <p>This banner has centered text overlay using absolute positioning and translation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

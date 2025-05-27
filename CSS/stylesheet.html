@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Connect | Local Event Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Inline style example for exercise -->
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap');
+
+/* Root variables for consistent theming */
+:root {
+    --primary-color: #2a5f8a;       /* Deep blue */
+    --secondary-color: #4c9f70;     /* Nature green */
+    --accent-color: #e67e22;        /* Warm orange */
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --text-color: #333;
+    --text-light: #6c757d;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* ============================================= */
+/* Base Typography */
+/* ============================================= */
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--light-color);
+    background-image: url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: overlay;
+    background-color: rgba(248, 249, 250, 0.9);
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    background: linear-gradient(90deg, rgba(42,95,138,0.1) 0%, rgba(255,255,255,0) 100%);
+    padding-left: 1rem;
+    border-left: 4px solid var(--secondary-color);
+}
+
+h3 {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+}
+
+p {
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    letter-spacing: 0.3px;
+}
+
+/* ============================================= */
+/* Layout & Structure */
+/* ============================================= */
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+section {
+    padding: 2.5rem 0;
+    margin: 1.5rem 0;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+/* ============================================= */
+/* Navigation Styles */
+/* ============================================= */
+
+nav {
+    background-color: var(--primary-color);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+nav li {
+    margin: 0 1rem;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    position: relative;
+}
+
+/* Link pseudo-classes */
+nav a:link {
+    color: white;
+}
+
+nav a:visited {
+    color: #e0e0e0;
+}
+
+nav a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+nav a:active {
+    transform: translateY(0);
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: var(--transition);
+    transform: translateX(-50%);
+}
+
+nav a:hover::after {
+    width: 80%;
+}
+
+/* ============================================= */
+/* Welcome Banner */
+/* ============================================= */
+
+#welcomeBanner {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 3rem 2rem;
+    margin: 2rem 0;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+#welcomeBanner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 15s infinite linear;
+}
+
+@keyframes pulse {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.highlight {
+    background-color: rgba(255, 255, 0, 0.3);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Inline style example for one heading (exercise requirement) */
+.special-heading {
+    color: #e74c3c !important; /* Red color for demonstration */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================= */
+/* Event Cards & Gallery */
+/* ============================================= */
+
+.eventCard {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    transition: var(--transition);
+    margin-bottom: 2rem;
+}
+
+.eventCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.event-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 3px solid var(--secondary-color);
+}
+
+.event-details {
+    padding: 1.5rem;
+}
+
+.event-date {
+    color: var(--accent-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.event-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.event-description {
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+/* ============================================= */
+/* Table Styles */
+/* ============================================= */
+
+.event-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    box-shadow: var(--box-shadow);
+}
+
+.event-table th, .event-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.event-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.event-table tr:nth-child(even) {
+    background-color: rgba(42, 95, 138, 0.05);
+}
+
+.event-table tr:hover {
+    background-color: rgba(76, 159, 112, 0.1);
+}
+
+/* ============================================= */
+/* Form Styles */
+/* ============================================= */
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(76, 159, 112, 0.25);
+}
+
+/* Form field outline example */
+input:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+button, .btn {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-block;
+    text-align: center;
+}
+
+button:hover, .btn:hover {
+    background-color: #3d8a5f;
+    transform: translateY(-2px);
+}
+
+/* ============================================= */
+/* Multi-column Layout for News Section */
+/* ============================================= */
+
+.news-article {
+    column-count: 2;
+    column-gap: 2rem;
+    column-rule: 1px solid #dee2e6;
+    margin: 2rem 0;
+}
+
+.news-article p {
+    margin-bottom: 1rem;
+    text-align: justify;
+    hyphens: auto;
+}
+
+/* ============================================= */
+/* Utility Classes */
+/* ============================================= */
+
+.text-center {
+    text-align: center;
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+
+.p-1 { padding: 0.5rem; }
+.p-2 { padding: 1rem; }
+.p-3 { padding: 1.5rem; }
+
+.hidden {
+    display: none;
+}
+
+.visibility-hidden {
+    visibility: hidden;
+}
+
+/* ============================================= */
+/* Responsive Design with Media Queries */
+/* ============================================= */
+
+@media (max-width: 992px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    section {
+        padding: 2rem 0;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Stack navigation */
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    nav li {
+        margin: 0.5rem 0;
+    }
+    
+    /* Single column layout for news */
+    .news-article {
+        column-count: 1;
+    }
+    
+    /* Adjust font sizes */
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.6rem;
+    }
+    
+    /* Make tables scrollable */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    /* Adjust spacing */
+    section {
+        padding: 1.5rem 0;
+        margin: 1rem 0;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Further reduce font sizes */
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.4rem;
+    }
+    
+    /* Adjust button sizes */
+    button, .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Make form elements full width */
+    .form-group {
+        width: 100%;
+    }
+}
+
+/* ============================================= */
+/* Animation & Interactive Elements */
+/* ============================================= */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animated-card {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Delay animations for staggered effect */
+.animated-card:nth-child(1) { animation-delay: 0.1s; }
+.animated-card:nth-child(2) { animation-delay: 0.2s; }
+.animated-card:nth-child(3) { animation-delay: 0.3s; }
+
+/* ============================================= */
+/* Footer Styles */
+/* ============================================= */
+
+footer {
+    background-color: var(--dark-color);
+    color: white;
+    padding: 3rem 0;
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.footer-links a {
+    color: white;
+    margin: 0 1rem;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-links a:hover {
+    color: var(--secondary-color);
+}
+
+.copyright {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#news">News</a></li>
+            <li><a href="#register">Register</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="help.html" target="_blank">Help</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Welcome Banner -->
+        <header id="welcomeBanner">
+            <h1>Welcome to <span class="highlight">Community Connect</span></h1>
+            <p>Your gateway to local events and activities</p>
+            <p class="special-offer">Special this week: <span class="highlight">Free</span> admission to all workshops!</p>
+        </header>
+
+        <!-- Home Section -->
+        <section id="home">
+            <h2 class="special-heading">Discover Your Community</h2>
+            <p>Join thousands of neighbors in exciting events, workshops, and social gatherings throughout the year.</p>
+            
+            <div class="video-container">
+                <h3>Featured Event: Summer Festival</h3>
+                <video id="eventVideo" controls>
+                    <source src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <p id="videoStatus">Loading video...</p>
+            </div>
+        </section>
+
+        <!-- Events Section -->
+        <section id="events">
+            <h2>Upcoming Events</h2>
+            
+            <div class="event-grid">
+                <div class="eventCard animated-card">
+                    <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=600" alt="Community Garden Workshop" class="event-image">
+                    <div class="event-details">
+                        <p class="event-date">June 15, 2024</p>
+                        <h3 class="event-title">Community Garden Workshop</h3>
+                        <p class="event-description">Learn sustainable gardening techniques from local experts.</p>
+                        <a href="#register" class="btn">Register Now</a>
+                    </div>
+                </div>
+                
+                <div class="eventCard animated-card">
+                    <img src="https://images.unsplash.com/photo-1544396821-4dd40b938ad3?w=600" alt="Outdoor Yoga" class="event-image">
+                    <div class="event-details">
+                        <p class="event-date">June 18, 2024</p>
+                        <h3 class="event-title">Sunrise Yoga in the Park</h3>
+                        <p class="event-description">Start your day with peaceful yoga sessions for all skill levels.</p>
+                        <a href="#register" class="btn">Register Now</a>
+                    </div>
+                </div>
+                
+                <div class="eventCard animated-card">
+                    <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600" alt="Book Club" class="event-image">
+                    <div class="event-details">
+                        <p class="event-date">June 22, 2024</p>
+                        <h3 class="event-title">Community Book Club</h3>
+                        <p class="event-description">Discussion of this month's selected novel with the author.</p>
+                        <a href="#register" class="btn">Register Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Events Table -->
+        <section id="event-schedule">
+            <h2>Event Schedule</h2>
+            <div class="table-responsive">
+                <table class="event-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Event</th>
+                            <th>Location</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>June 15</td>
+                            <td>Community Garden Workshop</td>
+                            <td>Central Park</td>
+                            <td>10:00 AM</td>
+                        </tr>
+                        <tr>
+                            <td>June 18</td>
+                            <td>Sunrise Yoga</td>
+                            <td>Riverside Park</td>
+                            <td>6:30 AM</td>
+                        </tr>
+                        <tr>
+                            <td>June 22</td>
+                            <td>Book Club Meeting</td>
+                            <td>Community Center</td>
+                            <td>2:00 PM</td>
+                        </tr>
+                        <tr>
+                            <td>June 25</td>
+                            <td>Local Art Exhibition</td>
+                            <td>Art Gallery</td>
+                            <td>5:00 PM</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- News Section -->
+        <section id="news">
+            <h2>Community News</h2>
+            <article class="news-article">
+                <h3>New Community Center Opens</h3>
+                <p>After two years of construction, our new state-of-the-art community center is finally open to the public. The facility features a gymnasium, swimming pool, library, and multiple meeting rooms available for community use.</p>
+                
+                <p>Mayor Johnson cut the ribbon at yesterday's ceremony, stating, "This center represents our commitment to bringing neighbors together and fostering community spirit." The center will host its first public event this Saturday - a family fun day with activities for all ages.</p>
+                
+                <h3>Upcoming Road Works</h3>
+                <p>Beginning next Monday, Main Street will undergo resurfacing work that may cause traffic delays. The project is expected to last three weeks, with work occurring weekdays between 9am and 3pm.</p>
+                
+                <p>Alternative routes will be signposted, and access to all businesses will be maintained throughout the project. The city council apologizes for any inconvenience and thanks residents for their patience during these necessary improvements.</p>
+                
+                <h3>Annual Food Drive Success</h3>
+                <p>Last weekend's food drive collected over 5,000 pounds of non-perishable items for the local food bank, smashing last year's record of 3,800 pounds. Organizers credit the success to increased participation from local schools and businesses.</p>
+            </article>
+        </section>
+
+        <!-- Registration Form -->
+        <section id="register">
+            <h2>Event Registration</h2>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name" autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="123-456-7890" onblur="validatePhone(this)">
+                    <small id="phoneError" class="hidden" style="color: red;">Please enter a valid phone number</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="event">Select Event</label>
+                    <select id="event" name="event" required onchange="showEventFee()">
+                        <option value="">-- Choose an event --</option>
+                        <option value="garden">Community Garden Workshop (Free)</option>
+                        <option value="yoga">Sunrise Yoga in the Park ($10)</option>
+                        <option value="bookclub">Book Club Meeting (Free)</option>
+                        <option value="art">Local Art Exhibition ($5)</option>
+                    </select>
+                    <p id="feeDisplay"></p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="comments">Special Requirements</label>
+                    <textarea id="comments" name="comments" rows="4" placeholder="Any accessibility needs or other requirements..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" onclick="submitForm()">Complete Registration</button>
+                    <button type="button" onclick="clearPreferences()" style="margin-left: 1rem; background-color: #e74c3c;">Clear Form</button>
+                </div>
+                
+                <output id="formOutput" class="hidden"></output>
+            </form>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <div class="contact-grid">
+                <div>
+                    <h3>Community Center</h3>
+                    <p>123 Main Street</p>
+                    <p>Our Town, OT 12345</p>
+                    <p>Phone: (555) 123-4567</p>
+                    <p>Email: info@communityconnect.org</p>
+                </div>
+                
+                <div>
+                    <h3>Office Hours</h3>
+                    <p>Monday-Friday: 9am-7pm</p>
+                    <p>Saturday: 10am-4pm</p>
+                    <p>Sunday: Closed</p>
+                </div>
+                
+                <div>
+                    <h3>Emergency Contacts</h3>
+                    <p>Police/Fire/Medical: 911</p>
+                    <p>Non-Emergency Police: (555) 987-6543</p>
+                    <p>After Hours Community Line: (555) 789-0123</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#events">Events</a>
+            <a href="#news">News</a>
+            <a href="#register">Register</a>
+            <a href="#contact">Contact</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </div>
+        <p class="copyright">&copy; 2024 Community Connect. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Video ready status
+        document.getElementById('eventVideo').addEventListener('canplay', function() {
+            document.getElementById('videoStatus').textContent = "Video ready to play! Click the play button.";
+        });
+
+        // Phone validation
+        function validatePhone(input) {
+            const phoneRegex = /^\d{3}-\d{3}-\d{4}$/;
+            const errorElement = document.getElementById('phoneError');
+            
+            if (input.value && !phoneRegex.test(input.value)) {
+                errorElement.classList.remove('hidden');
+                input.style.borderColor = 'red';
+                return false;
+            } else {
+                errorElement.classList.add('hidden');
+                input.style.borderColor = '';
+                return true;
+            }
+        }
+
+        // Show event fee
+        function showEventFee() {
+            const select = document.getElementById('event');
+            const feeDisplay = document.getElementById('feeDisplay');
+            const selectedOption = select.options[select.selectedIndex];
+            
+            if (selectedOption.value) {
+                const feeText = selectedOption.text.match(/\(([^)]+)\)/);
+                feeDisplay.textContent = feeText ? `Fee: ${feeText[1]}` : 'Free event';
+                
+                // Save to localStorage
+                localStorage.setItem('selectedEvent', selectedOption.value);
+            } else {
+                feeDisplay.textContent = '';
+            }
+        }
+
+        // Load saved preferences
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedEvent = localStorage.getItem('selectedEvent');
+            if (savedEvent) {
+                const select = document.getElementById('event');
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === savedEvent) {
+                        select.selectedIndex = i;
+                        showEventFee();
+                        break;
+                    }
+                }
+            }
+        });
+
+        // Clear preferences
+        function clearPreferences() {
+            localStorage.removeItem('selectedEvent');
+            document.getElementById('registrationForm').reset();
+            document.getElementById('feeDisplay').textContent = '';
+            document.getElementById('formOutput').classList.add('hidden');
+            document.getElementById('phoneError').classList.add('hidden');
+        }
+
+        // Form submission
+        function submitForm() {
+            // Validate phone if provided
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput.value && !validatePhone(phoneInput)) {
+                return false;
+            }
+
+            const output = document.getElementById('formOutput');
+            output.innerHTML = `
+                <div style="padding: 1rem; background-color: #4c9f70; color: white; border-radius: 8px;">
+                    <h3 style="margin-top: 0;">Registration Successful!</h3>
+                    <p>Thank you for registering. We've sent a confirmation to your email.</p>
+                </div>
+            `;
+            output.classList.remove('hidden');
+            
+            // Scroll to confirmation
+            output.scrollIntoView({ behavior: 'smooth' });
+            
+            // Prevent actual form submission for this demo
+            return false;
+        }
+    </script>
+</body>
+</html>
